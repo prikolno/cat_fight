@@ -1,4 +1,9 @@
-from imports import *
+import os
+import pygame
+import thorpy
+import config
+import database
+from app import App
 
 
 if __name__ == '__main__':

@@ -1,4 +1,6 @@
-from imports import *
+import pygame
+import config
+import forms
 
 
 class App:
@@ -9,7 +11,7 @@ class App:
 
         self.clock = pygame.time.Clock()
 
-        self.__current_form = form.MainMenu(self)
+        self.__current_form = forms.MainMenu(self)
 
     def change_form(self, new_form):
         self.window.fill((0, 0, 0))

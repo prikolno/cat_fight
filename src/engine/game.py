@@ -19,6 +19,11 @@ class Game:
         self.tiles = pygame.sprite.Group()
 
     def create(self):
+        self.status = GAME_STATUS_PLAY
+
+        self.sprites = pygame.sprite.Group()
+        self.tiles = pygame.sprite.Group()
+
         k = {
             'left': pygame.K_a,
             'right': pygame.K_d,
@@ -100,6 +105,9 @@ class Game:
     def update(self, events: typing.List[pygame.event.Event]):
         self.__handle_events(events)
 
+        if len(self.sprites) <= 1:
+            self.status = GAME_STATUS_OVER
+
         if self.status == GAME_STATUS_PLAY:
             self.window.blit(self.background, (0, 0))
 
@@ -107,10 +115,15 @@ class Game:
 
             self.sprites.update(tiles=self.tiles)
             self.sprites.draw(self.window)
+        elif self.status == GAME_STATUS_OVER:
+            img = pygame.transform.scale(database.get_image('gui_game_over.png', True), (64*12, 16*12))
+            self.window.blit(img, (config.WINDOW_WIDTH / 2 - 64*6, config.WINDOW_HEIGHT / 2 - 16*6))
 
-            for k, v in self.keys.items():
-                if v == KEY_STATUS_DOWN:
-                    self.keys[k] = KEY_STATUS_PRESSED
-                elif v == KEY_STATUS_UP:
-                    self.keys[k] = KEY_STATUS_RELEASED
+            if self.get_key_status(pygame.K_SPACE) == KEY_STATUS_UP:
+                self.create()
 
+        for k, v in self.keys.items():
+            if v == KEY_STATUS_DOWN:
+                self.keys[k] = KEY_STATUS_PRESSED
+            elif v == KEY_STATUS_UP:
+                self.keys[k] = KEY_STATUS_RELEASED

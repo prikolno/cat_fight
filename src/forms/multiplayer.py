@@ -2,7 +2,7 @@ import pygame
 import thorpy
 import database
 from .form import Form
-import form
+import forms
 
 
 class Multiplayer(Form):
@@ -34,4 +34,4 @@ class Multiplayer(Form):
         self.updater = main_group.get_updater()
 
     def button_back_at_unclick(self):
-        self.app.change_form(form.MainMenu(self.app))
+        self.app.change_form(forms.MainMenu(self.app))

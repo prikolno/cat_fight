@@ -2,7 +2,7 @@ import database
 import pygame
 import thorpy
 from .form import Form
-import form
+import forms
 
 
 class MainMenu(Form):
@@ -36,10 +36,10 @@ class MainMenu(Form):
         self.updater = main_group.get_updater()
 
     def button_play_at_unclick(self):
-        self.app.change_form(form.Game(self.app))
+        self.app.change_form(forms.Game(self.app))
 
     def button_multiplayer_at_unclick(self):
-        self.app.change_form(form.Multiplayer(self.app))
+        self.app.change_form(forms.Multiplayer(self.app))
 
     def button_quit_at_unclick(self):
         self.app.running = False

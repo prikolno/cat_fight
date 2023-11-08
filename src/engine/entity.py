@@ -1,4 +1,6 @@
-from imports import *
+import pygame
+from constants import *
+import config
 
 
 class Entity(pygame.sprite.Sprite):
@@ -32,7 +34,7 @@ class Entity(pygame.sprite.Sprite):
         self.heal_points = self.heal_points_max
         self.stamina_points_max = 100
         self.stamina_points = self.stamina_points_max
-        self.damage = 10
+        self.damage = 1000
 
         self._punch_rate_i = 0
         self._punch_rate = int(0.25 * config.FPS)
@@ -224,8 +226,8 @@ class Entity(pygame.sprite.Sprite):
         pygame.draw.rect(surface, (100, 100, 200), (20, 10, 60 * (self.stamina_points / self.stamina_points_max), 10))
         pygame.draw.rect(surface, (0, 0, 0), (20, 10, 60, 10), 2)
 
-        pygame.draw.rect(surface, (0, 0, 200), pygame.Rect(0, 0, 100, 110), 1)
-        pygame.draw.rect(surface, (0, 0, 0), pygame.Rect(25, 30, 50, 68), 1)
+        # pygame.draw.rect(surface, (0, 0, 200), pygame.Rect(0, 0, 100, 110), 1)
+        # pygame.draw.rect(surface, (0, 0, 0), pygame.Rect(25, 30, 50, 68), 1)
 
         self.image = surface
 

@@ -10,6 +10,6 @@ import thorpy
 import config
 from constants import *
 import database
-import game
-import form
+import engine
+import forms
 from app import App
