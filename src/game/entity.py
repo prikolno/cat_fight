@@ -224,8 +224,8 @@ class Entity(pygame.sprite.Sprite):
         pygame.draw.rect(surface, (100, 100, 200), (20, 10, 60 * (self.stamina_points / self.stamina_points_max), 10))
         pygame.draw.rect(surface, (0, 0, 0), (20, 10, 60, 10), 2)
 
-        # pygame.draw.rect(surface, (0, 0, 200), pygame.Rect(0, 0, 100, 110), 1)
-        # pygame.draw.rect(surface, (0, 0, 0), pygame.Rect(25, 30, 50, 68), 1)
+        pygame.draw.rect(surface, (0, 0, 200), pygame.Rect(0, 0, 100, 110), 1)
+        pygame.draw.rect(surface, (0, 0, 0), pygame.Rect(25, 30, 50, 68), 1)
 
         self.image = surface
 

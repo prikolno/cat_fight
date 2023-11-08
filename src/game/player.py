@@ -1,4 +1,5 @@
-from imports import *
+from constants import *
+from .entity import Entity
 
 
 class Player(Entity):

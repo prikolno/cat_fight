@@ -1,5 +1,8 @@
 from imports import *
 
+from .player import Player
+from .tile import Tile
+
 
 class Game:
     def __init__(self, window):
@@ -9,7 +12,7 @@ class Game:
         self.status = GAME_STATUS_PLAY
         self.keys = dict()
 
-        img = database.get_image("desert_b.png", False)
+        img = database.get_image("desert_a.png", False)
         self.background = pygame.transform.scale(img, (config.WINDOW_WIDTH, config.WINDOW_HEIGHT))
 
         self.sprites = pygame.sprite.Group()
@@ -23,6 +26,7 @@ class Game:
             'jump': pygame.K_w,
             'punch': pygame.K_e
         }
+
         e = Player(self, (100, 100), k, database.get_image("sprite_vita.png", True))
         self.sprites.add(e)
 

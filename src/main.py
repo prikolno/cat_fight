@@ -8,7 +8,14 @@ if __name__ == '__main__':
 
     pygame.init()
 
-    app = App()
+    window = pygame.display.set_mode((config.WINDOW_WIDTH, config.WINDOW_HEIGHT), pygame.DOUBLEBUF)
+    pygame.display.set_caption('Game')
+    pygame.display.set_icon(database.get_image('icon.ico', True))
+    window.set_alpha(None)
+
+    thorpy.init(window)
+
+    app = App(window)
     app.run()
 
     pygame.quit()
