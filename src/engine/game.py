@@ -1,5 +1,8 @@
-from imports import *
-
+import pygame
+from constants import *
+import config
+import database
+from typing import List
 from .player import Player
 from .tile import Tile
 
@@ -86,7 +89,7 @@ class Game:
     def pause(self):
         self.status = GAME_STATUS_PAUSE
 
-    def __handle_events(self, events: typing.List[pygame.event.Event]):
+    def __handle_events(self, events: List[pygame.event.Event]):
         for event in events:
             if event.type == pygame.KEYDOWN:
                 self.keys[event.key] = KEY_STATUS_DOWN
@@ -102,18 +105,18 @@ class Game:
     def get_key_status(self, key: int):
         return self.keys.setdefault(key, KEY_STATUS_RELEASED)
 
-    def update(self, events: typing.List[pygame.event.Event]):
+    def update(self, events: List[pygame.event.Event]):
         self.__handle_events(events)
-
-        if len(self.sprites) <= 1:
-            self.status = GAME_STATUS_OVER
 
         if self.status == GAME_STATUS_PLAY:
             self.window.blit(self.background, (0, 0))
 
             self.tiles.update()
-
             self.sprites.update(tiles=self.tiles)
+
+            if len(self.sprites) <= 1:
+                self.status = GAME_STATUS_OVER
+
             self.sprites.draw(self.window)
         elif self.status == GAME_STATUS_OVER:
             img = pygame.transform.scale(database.get_image('gui_game_over.png', True), (64*12, 16*12))
