@@ -9,7 +9,5 @@ class Form:
 
     def update(self, events: List[pygame.event.Event], mouse_rel: tuple[int, int]):
         if self.updater is not None:
-            self.updater.update()
-
-        pygame.display.update()
+            self.updater.update(events=events, mouse_rel=mouse_rel)
 

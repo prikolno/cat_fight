@@ -7,9 +7,7 @@ from app import App
 
 
 if __name__ == '__main__':
-    path = os.path.split(os.path.realpath(__file__))
-    path = os.path.split(path[0])
-    config.DIR_PATH = path[0]
+    config.DIR_PATH = os.path.split(os.path.split(os.path.realpath(__file__))[0])[0]
 
     pygame.init()
 

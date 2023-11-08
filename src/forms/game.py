@@ -13,4 +13,4 @@ class Game(Form):
 
     def update(self, events: List[pygame.event.Event], mouse_rel: tuple[int, int]):
         self.game.update(events)
-        # super(FormGame, self).update(events, mouse_rel)
+        super(Game, self).update(events, mouse_rel)
