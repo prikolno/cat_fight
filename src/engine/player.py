@@ -6,7 +6,9 @@ from .entity import Entity
 
 class Player(Entity):
     def __init__(self, game, pos, keys, sheet):
-        super(Player, self).__init__(game, pos, sheet)
+        super(Player, self).__init__(game, pygame.surface.Surface((100, 100)),
+                                     pygame.rect.Rect(pos[0], pos[1], 100, 110),
+                                     pygame.rect.Rect(pos[0] + 25, pos[1] + 30, 50, 68))
 
         self.status = {
             PLAYER_STATUS_IDLE: False,
@@ -202,8 +204,8 @@ class Player(Entity):
         pygame.draw.rect(surface, (100, 100, 200), (20, 10, 60 * (self.stamina_points / self.stamina_points_max), 10))
         pygame.draw.rect(surface, (0, 0, 0), (20, 10, 60, 10), 2)
 
-        # pygame.draw.rect(surface, (0, 0, 200), pygame.Rect(0, 0, 100, 110), 1)
-        # pygame.draw.rect(surface, (0, 0, 0), pygame.Rect(25, 30, 50, 68), 1)
+        # pygame.draw.rect(surface, (0, 0, 200), pygame.Rect(0, 0, 100, 110), 1) # rect
+        # pygame.draw.rect(surface, (0, 0, 0), pygame.Rect(25, 30, 50, 68), 1) # collide
 
         self.image = surface
 

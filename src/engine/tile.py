@@ -1,4 +1,5 @@
-from imports import *
+import pygame
+import database
 
 
 class Tile(pygame.sprite.Sprite):

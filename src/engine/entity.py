@@ -1,17 +1,16 @@
 import pygame
-from constants import *
 import config
 
 
 class Entity(pygame.sprite.Sprite):
-    def __init__(self, game, pos, sheet):
+    def __init__(self, game, image, rect, collide):
         super().__init__()
 
         self.game = game
 
-        self.image = pygame.Surface((100, 100))
-        self.rect = pygame.Rect(pos[0], pos[1], 100, 110)
-        self.collide = pygame.Rect(self.rect.left + 25, self.rect.top + 30, 50, 68)
+        self.image = image
+        self.rect = rect
+        self.collide = collide
         self.direction = 1
         self.velocity = [0.0, 0.0]
         self.max_velocity = [10000 / config.FPS, 10000 / config.FPS]
