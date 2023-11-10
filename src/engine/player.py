@@ -210,21 +210,21 @@ class Player(Entity):
         self.image = surface
 
     def _handle_input(self):
-        if self.game.get_key_status(self._key_left) == KEY_STATUS_PRESSED:
+        if self.game.keys[self._key_left] == KEY_STATUS_PRESSED:
             self.direction = -1
             self.status[PLAYER_STATUS_WALK] = True
-        elif self.game.get_key_status(self._key_right) == KEY_STATUS_PRESSED:
+        elif self.game.keys[self._key_right] == KEY_STATUS_PRESSED:
             self.direction = 1
             self.status[PLAYER_STATUS_WALK] = True
         else:
             self.status[PLAYER_STATUS_WALK] = False
 
-        if self.game.get_key_status(self._key_jump) == KEY_STATUS_DOWN:
+        if self.game.keys[self._key_jump] == KEY_STATUS_DOWN:
             if self.status[PLAYER_STATUS_ON_GROUND] or self._jump_count < self._jump_count_max:
                 self._jump()
 
         self.status[PLAYER_STATUS_RUN] = self.status[PLAYER_STATUS_WALK] and \
-                                         (self.game.get_key_status(self._key_shift) == KEY_STATUS_PRESSED)
+                                         self.game.keys[self._key_shift] == KEY_STATUS_PRESSED
 
         # if self.status[ENTITY_STATUS_RUN]:
         #     self.status[ENTITY_STATUS_WALK] = False
@@ -236,7 +236,7 @@ class Player(Entity):
 
         self.status[PLAYER_STATUS_IDLE] = not (self.status[PLAYER_STATUS_RUN] or self.status[PLAYER_STATUS_WALK])
 
-        if self.game.get_key_status(self._key_punch) == KEY_STATUS_DOWN:
+        if self.game.keys[self._key_punch] == KEY_STATUS_DOWN:
             if self._punch_rate_i == 0 and self.stamina_points >= 10:
                 self._punch()
 

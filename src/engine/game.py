@@ -7,13 +7,40 @@ from .player import Player
 from .tile import Tile
 
 
+class KeysInputHandler:
+    def __init__(self):
+        self.keys = dict()
+
+    def __getitem__(self, item):
+        if item in self.keys:
+            return self.keys[item]
+        else:
+            return KEY_STATUS_RELEASED
+
+    def __iter__(self):
+        return self.keys.items()
+
+    def handle_events(self, events):
+        for k, v in self.keys.items():
+            if v == KEY_STATUS_DOWN:
+                self.keys[k] = KEY_STATUS_PRESSED
+            elif v == KEY_STATUS_UP:
+                self.keys[k] = KEY_STATUS_RELEASED
+
+        for event in events:
+            if event.type == pygame.KEYDOWN:
+                self.keys[event.key] = KEY_STATUS_DOWN
+            elif event.type == pygame.KEYUP:
+                self.keys[event.key] = KEY_STATUS_UP
+
+
 class Game:
     def __init__(self, window):
         self.window = window
 
         self.type = GAME_TYPE_OFFLINE
         self.status = GAME_STATUS_PLAY
-        self.keys = dict()
+        self.keys = KeysInputHandler()
 
         img = database.get_image("desert_a.png", False)
         self.background = pygame.transform.scale(img, (config.WINDOW_WIDTH, config.WINDOW_HEIGHT))
@@ -92,21 +119,15 @@ class Game:
     def __handle_events(self, events: List[pygame.event.Event]):
         for event in events:
             if event.type == pygame.KEYDOWN:
-                self.keys[event.key] = KEY_STATUS_DOWN
-
                 if event.key == pygame.K_SPACE:
                     if self.status == GAME_STATUS_PLAY:
-                        self.play()
-                    elif self.status == GAME_STATUS_PAUSE:
                         self.pause()
-            elif event.type == pygame.KEYUP:
-                self.keys[event.key] = KEY_STATUS_UP
-
-    def get_key_status(self, key: int):
-        return self.keys.setdefault(key, KEY_STATUS_RELEASED)
+                    elif self.status == GAME_STATUS_PAUSE:
+                        self.play()
 
     def update(self, events: List[pygame.event.Event]):
         self.__handle_events(events)
+        self.keys.handle_events(events)
 
         if self.status == GAME_STATUS_PLAY:
             self.window.blit(self.background, (0, 0))
@@ -122,11 +143,10 @@ class Game:
             img = pygame.transform.scale(database.get_image('gui_game_over.png', True), (64*12, 16*12))
             self.window.blit(img, (config.WINDOW_WIDTH / 2 - 64*6, config.WINDOW_HEIGHT / 2 - 16*6))
 
-            if self.get_key_status(pygame.K_SPACE) == KEY_STATUS_UP:
+            img = pygame.transform.scale(database.get_image('gui_press_space_to_restart.png', True), (133 * 6, 7 * 6))
+            self.window.blit(img, (config.WINDOW_WIDTH / 2 - 133 * 3, config.WINDOW_HEIGHT / 2 - 7 * 3 + 70))
+
+            if self.keys[pygame.K_SPACE] == KEY_STATUS_UP:
                 self.create()
 
-        for k, v in self.keys.items():
-            if v == KEY_STATUS_DOWN:
-                self.keys[k] = KEY_STATUS_PRESSED
-            elif v == KEY_STATUS_UP:
-                self.keys[k] = KEY_STATUS_RELEASED
+
