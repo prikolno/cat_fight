@@ -3,35 +3,9 @@ from constants import *
 import config
 import database
 from typing import List
+from .common import KeysInputHandler
 from .player import Player
 from .tile import Tile
-
-
-class KeysInputHandler:
-    def __init__(self):
-        self.keys = dict()
-
-    def __getitem__(self, item):
-        if item in self.keys:
-            return self.keys[item]
-        else:
-            return KEY_STATUS_RELEASED
-
-    def __iter__(self):
-        return self.keys.items()
-
-    def handle_events(self, events):
-        for k, v in self.keys.items():
-            if v == KEY_STATUS_DOWN:
-                self.keys[k] = KEY_STATUS_PRESSED
-            elif v == KEY_STATUS_UP:
-                self.keys[k] = KEY_STATUS_RELEASED
-
-        for event in events:
-            if event.type == pygame.KEYDOWN:
-                self.keys[event.key] = KEY_STATUS_DOWN
-            elif event.type == pygame.KEYUP:
-                self.keys[event.key] = KEY_STATUS_UP
 
 
 class Game:
@@ -110,35 +84,27 @@ class Game:
         self.window.blit(self.background, (0, 0))
         pygame.display.update()
 
-    def play(self):
-        self.status = GAME_STATUS_PLAY
-
-    def pause(self):
-        self.status = GAME_STATUS_PAUSE
-
     def __handle_events(self, events: List[pygame.event.Event]):
         for event in events:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     if self.status == GAME_STATUS_PLAY:
-                        self.pause()
+                        self.status = GAME_STATUS_PAUSE
                     elif self.status == GAME_STATUS_PAUSE:
-                        self.play()
+                        self.status = GAME_STATUS_PLAY
 
     def update(self, events: List[pygame.event.Event]):
         self.__handle_events(events)
         self.keys.handle_events(events)
 
-        if self.status == GAME_STATUS_PLAY:
-            self.window.blit(self.background, (0, 0))
+        self.window.blit(self.background, (0, 0))
 
+        if self.status == GAME_STATUS_PLAY:
             self.tiles.update()
             self.sprites.update(tiles=self.tiles)
 
             if len(self.sprites) <= 1:
                 self.status = GAME_STATUS_OVER
-
-            self.sprites.draw(self.window)
         elif self.status == GAME_STATUS_OVER:
             img = pygame.transform.scale(database.get_image('gui_game_over.png', True), (64*12, 16*12))
             self.window.blit(img, (config.WINDOW_WIDTH / 2 - 64*6, config.WINDOW_HEIGHT / 2 - 16*6))
@@ -149,4 +115,4 @@ class Game:
             if self.keys[pygame.K_SPACE] == KEY_STATUS_UP:
                 self.create()
 
-
+        self.sprites.draw(self.window)

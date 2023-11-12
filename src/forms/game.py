@@ -5,10 +5,10 @@ from .form import Form
 
 
 class Game(Form):
-    def __init__(self, app):
+    def __init__(self, app, game):
         super(Game, self).__init__(app)
 
-        self.game = engine.Game(self.app.window)
+        self.game = game
         self.game.create()
 
     def update(self, events: List[pygame.event.Event], mouse_rel: tuple[int, int]):

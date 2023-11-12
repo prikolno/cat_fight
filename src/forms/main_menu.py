@@ -1,6 +1,7 @@
 import database
 import pygame
 import thorpy
+import engine
 from .form import Form
 import forms
 
@@ -36,7 +37,8 @@ class MainMenu(Form):
         self.updater = main_group.get_updater()
 
     def button_play_at_unclick(self):
-        self.app.change_form(forms.Game(self.app))
+        game = engine.Game(self.app.window)
+        self.app.change_form(forms.Game(self.app, game))
 
     def button_multiplayer_at_unclick(self):
         self.app.change_form(forms.Multiplayer(self.app))
