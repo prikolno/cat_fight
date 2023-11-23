@@ -6,6 +6,7 @@ from typing import List
 from .common import KeysInputHandler
 from .player import Player
 from .tile import Tile
+from .map import Map
 
 
 class Game:
@@ -15,9 +16,8 @@ class Game:
         self.type = GAME_TYPE_OFFLINE
         self.status = GAME_STATUS_PLAY
         self.keys = KeysInputHandler()
-
-        img = database.get_image("desert_a.png", False)
-        self.background = pygame.transform.scale(img, (config.WINDOW_WIDTH, config.WINDOW_HEIGHT))
+        self.map = Map("map_1.json")
+        self.background = pygame.surface.Surface((config.WINDOW_WIDTH, config.WINDOW_HEIGHT))
 
         self.sprites = pygame.sprite.Group()
         self.tiles = pygame.sprite.Group()
@@ -26,7 +26,6 @@ class Game:
         self.status = GAME_STATUS_PLAY
 
         self.sprites = pygame.sprite.Group()
-        self.tiles = pygame.sprite.Group()
 
         k = {
             'left': pygame.K_a,
@@ -49,39 +48,11 @@ class Game:
         e = Player(self, (1000, 100), k, database.get_image("sprite_mort.png", True))
         self.sprites.add(e)
 
-        level_text = """1111111111111111111111111111
-                           1000000000000000000000000001
-                           1000000000000000000000000001
-                           1000000000000000000000000001
-                           1000000000000000000000000001
-                           1000000000000000000000000001
-                           1000000000000000000000000001
-                           1000000000000000000000000001
-                           1000000000000111100000000001
-                           1000000000000000000000000001
-                           1111111110000000000000000001
-                           1000000000000000000011110001
-                           1000000000000000000000000001
-                           1000000000000000000000000001
-                           1000000000000111100000000001
-                           1000000000000000000000000001
-                           1111111000000000000011110001
-                           1000000000000000000000000001
-                           1000000000000000000000000001
-                           1111111111111111111111111111"""
+        self.map.create()
 
-        level = [[int(n) for n in list(line.replace(' ', ''))] for line in level_text.split('\n')]
+        self.background = self.map.get_background()
+        self.tiles = self.map.tiles
 
-        s_x = -50
-        s_y = -250
-
-        for j, line in enumerate(level):
-            for i, t in enumerate(line):
-                if t == 1:
-                    self.tiles.add(Tile(pygame.Rect(s_x + 50 * i, s_y + 50 * j, 50, 50)))
-
-        self.tiles.draw(self.background)
-        self.window.blit(self.background, (0, 0))
         pygame.display.update()
 
     def __handle_events(self, events: List[pygame.event.Event]):
@@ -101,7 +72,7 @@ class Game:
 
         if self.status == GAME_STATUS_PLAY:
             self.tiles.update()
-            self.sprites.update(tiles=self.tiles)
+            self.sprites.update()
 
             if len(self.sprites) <= 1:
                 self.status = GAME_STATUS_OVER

@@ -240,12 +240,12 @@ class Player(Entity):
             if self._punch_rate_i == 0 and self.stamina_points >= 10:
                 self._punch()
 
-    def update(self, tiles=None, surface=None):
+    def update(self, surface=None):
         self._handle_input()
 
-        super(Player, self).update(tiles, surface)
+        super(Player, self).update(surface)
 
-        self._handle_collide_tiles(tiles)
+        self._handle_collide_tiles(self.game.tiles)
         self._handle_regeneration()
 
         if self.status[PLAYER_STATUS_ON_GROUND]:

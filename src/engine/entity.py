@@ -37,5 +37,5 @@ class Entity(pygame.sprite.Sprite):
 
         self.move(*self.velocity)
 
-    def update(self, tiles=None, surface=None):
+    def update(self, surface=None):
         self._handle_moving()
