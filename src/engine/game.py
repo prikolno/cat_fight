@@ -7,6 +7,8 @@ from .common import KeysInputHandler
 from .player import Player
 from .tile import Tile
 from .map import Map
+from .bullet import Bullet
+from .weapon import Weapon
 
 
 class Game:
@@ -16,16 +18,24 @@ class Game:
         self.type = GAME_TYPE_OFFLINE
         self.status = GAME_STATUS_PLAY
         self.keys = KeysInputHandler()
-        self.map = Map("map_1.json")
-        self.background = pygame.surface.Surface((config.WINDOW_WIDTH, config.WINDOW_HEIGHT))
+
+        self.background = None
+        self.map = None
 
         self.sprites = pygame.sprite.Group()
+        self.weapons = pygame.sprite.Group()
+        self.bullets = pygame.sprite.Group()
         self.tiles = pygame.sprite.Group()
 
     def create(self):
         self.status = GAME_STATUS_PLAY
 
+        self.map = Map("map_1.json")
+        self.background = pygame.surface.Surface((config.WINDOW_WIDTH, config.WINDOW_HEIGHT))
+
         self.sprites = pygame.sprite.Group()
+        self.weapons = pygame.sprite.Group()
+        self.bullets = pygame.sprite.Group()
 
         k = {
             'left': pygame.K_a,
@@ -37,6 +47,10 @@ class Game:
 
         e = Player(self, (100, 100), k, database.get_image("sprite_vita.png", True))
         self.sprites.add(e)
+
+        e.weapon = Weapon(self)
+        e.weapon.rect.center = (e.rect.centerx, e.rect.centery + 20)
+        self.weapons.add(e.weapon)
 
         k = {
             'left': pygame.K_LEFT,
@@ -52,8 +66,6 @@ class Game:
 
         self.background = self.map.get_background()
         self.tiles = self.map.tiles
-
-        pygame.display.update()
 
     def __handle_events(self, events: List[pygame.event.Event]):
         for event in events:
@@ -73,6 +85,8 @@ class Game:
         if self.status == GAME_STATUS_PLAY:
             self.tiles.update()
             self.sprites.update()
+            self.weapons.update()
+            self.bullets.update()
 
             if len(self.sprites) <= 1:
                 self.status = GAME_STATUS_OVER
@@ -87,3 +101,5 @@ class Game:
                 self.create()
 
         self.sprites.draw(self.window)
+        self.weapons.draw(self.window)
+        self.bullets.draw(self.window)

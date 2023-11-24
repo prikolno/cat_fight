@@ -6,7 +6,7 @@ import database
 from app import App
 
 
-if __name__ == '__main__':
+def main():
     config.DIR_PATH = os.path.split(os.path.split(os.path.realpath(__file__))[0])[0]
 
     pygame.init()
@@ -22,3 +22,7 @@ if __name__ == '__main__':
     app.run()
 
     pygame.quit()
+
+
+if __name__ == '__main__':
+    main()

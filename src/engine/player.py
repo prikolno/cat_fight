@@ -2,6 +2,8 @@ import pygame
 from constants import *
 import config
 from .entity import Entity
+import engine.bullet
+import engine.weapon
 
 
 class Player(Entity):
@@ -9,6 +11,8 @@ class Player(Entity):
         super(Player, self).__init__(game, pygame.surface.Surface((100, 100)),
                                      pygame.rect.Rect(pos[0], pos[1], 100, 110),
                                      pygame.rect.Rect(pos[0] + 25, pos[1] + 30, 50, 68))
+
+        self.weapon = None
 
         self.status = {
             PLAYER_STATUS_IDLE: False,
@@ -57,6 +61,18 @@ class Player(Entity):
         self._key_shift = keys['shift']
         self._key_jump = keys['jump']
         self._key_punch = keys['punch']
+
+    def move(self, x, y):
+        super(Player, self).move(x, y)
+
+        if self.weapon is not None:
+            self.weapon.rect = self.weapon.rect.move(x, y)
+
+    def move_ip(self, x, y):
+        super(Player, self).move_ip(x, y)
+
+        if self.weapon is not None:
+            self.weapon.rect = self.weapon.rect.move_ip(x, y)
 
     def get_punch(self, other):
         self.change_heal_points(-other.damage)
@@ -189,6 +205,12 @@ class Player(Entity):
         if self.status[PLAYER_STATUS_ON_GROUND]:
             self._jump_count = 0
 
+    def _handle_collide_bullets(self, bullets):
+        for b in bullets:
+            if b.player != self:
+                if self.collide.collidepoint(*b.rect.center):
+                    self.change_heal_points(-b.damage)
+
     def _render(self):
         surface = pygame.Surface((100, 110), pygame.SRCALPHA)
         img = self._sheet.subsurface(self._anim_current[self._anim_i // self._anim_rate])
@@ -210,6 +232,12 @@ class Player(Entity):
         self.image = surface
 
     def _handle_input(self):
+        mouse_buttons = pygame.mouse.get_pressed()
+
+        if mouse_buttons[0]:
+            if self.weapon is not None:
+                self.weapon.shoot(self)
+
         if self.game.keys[self._key_left] == KEY_STATUS_PRESSED:
             self.direction = -1
             self.status[PLAYER_STATUS_WALK] = True
@@ -246,6 +274,7 @@ class Player(Entity):
         super(Player, self).update(surface)
 
         self._handle_collide_tiles(self.game.tiles)
+        self._handle_collide_bullets(self.game.bullets)
         self._handle_regeneration()
 
         if self.status[PLAYER_STATUS_ON_GROUND]:
@@ -256,3 +285,9 @@ class Player(Entity):
 
         self._handle_anim()
         self._render()
+
+    def kill(self) -> None:
+        super(Player, self).kill()
+
+        if self.weapon is not None:
+            self.weapon.kill()
