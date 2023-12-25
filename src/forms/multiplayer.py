@@ -10,6 +10,13 @@ class Multiplayer(Form):
     def __init__(self, app):
         super(Multiplayer, self).__init__(app)
 
+        img = database.get_image('gui_volume.png')
+        img1 = pygame.transform.scale(img.subsurface((0, 0, 64, 16)), (256, 64))
+        img2 = pygame.transform.scale(img.subsurface((64, 0, 64, 16)), (256, 64))
+        img3 = pygame.transform.scale(img.subsurface((128, 0, 64, 16)), (256, 64))
+        button_volume = thorpy.ImageButton("", img1, img2, img3)
+        button_volume.at_unclick = self.button_select_at_unclick
+
         text_input_address = thorpy.TextInput('', '123.123.123.123:5000')
         text_input_address.center_on(self.app.window)
 
@@ -27,12 +34,16 @@ class Multiplayer(Form):
         button_back = thorpy.ImageButton("", img1, img2, img3)
         button_back.at_unclick = self.button_back_at_unclick
 
-        group_form = thorpy.Group([text_input_address, button_select, button_back])
+        group_form = thorpy.Group([button_volume, text_input_address, button_select, button_back])
         group_form.center_on(self.app.window)
 
         main_group = thorpy.Group([group_form], None, (0, 0))
 
         self.updater = main_group.get_updater()
+
+    def button_volume_at_unclick(self):
+        game = engine.GameOnline(self.app.window)
+        self.app.change_form(forms.Game(self.app, game))
 
     def button_select_at_unclick(self):
         game = engine.GameOnline(self.app.window)

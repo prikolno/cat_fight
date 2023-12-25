@@ -11,7 +11,6 @@ class App:
         self.__current_form = forms.MainMenu(self)
 
     def change_form(self, new_form):
-        # self.window.fill((0, 0, 0))
         self.__current_form = new_form
 
     def run(self):

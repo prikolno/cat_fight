@@ -5,10 +5,19 @@ import config
 import database
 import engine.player
 import engine.game
+import multiplayer.net
 from engine.map import Map
 
 
 class GameOnline(engine.Game):
+    def __init__(self, window):
+        super(GameOnline, self).__init__(window)
+
+        self.connection = multiplayer.net.Connection()
+
+    def _connect_to_server(self):
+        pass
+    
     def create(self):
         self.status = constants.GAME_STATUS_PLAY
 
